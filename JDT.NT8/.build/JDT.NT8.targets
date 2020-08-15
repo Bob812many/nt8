@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- $Id$ -->
+  <PropertyGroup>
+    <NinjaTraderDir>C:\Program Files (x86)\NinjaTrader 8\</NinjaTraderDir>
+    <NinjaTraderCustomDir>$(registry:HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders@Personal)\NinjaTrader 8\bin\Custom\</NinjaTraderCustomDir>
+    <NinjaTraderTemplatesDir>$(registry:HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders@Personal)\NinjaTrader 8\templates\</NinjaTraderTemplatesDir>
+  </PropertyGroup>
+  
+  <Target Name="CopyOut" Condition=" '$(Configuration)' != 'Test' " AfterTargets="Build" >
+    <ItemGroup>
+      <!-- <NTTradingHoursTemplates Include="$(OutputPath)TradingHours\*.xml" /> -->
+      <NTProjectFiles Condition=" '$(Configuration)' == 'Debug' " Include="$(OutputPath)*.dll" />
+      <!-- <NTProjectFiles Condition=" '$(Configuration)' == 'Debug' " Include="$(OutputPath)*.pdb" /> -->
+      <!-- <NativeLibraries Include="$(OutputPath)Lib\**\*.*" /> -->
+    </ItemGroup>
+    
+    <!-- <Copy SourceFiles="@(NTTradingHoursTemplates)"
+      DestinationFolder="$(NinjaTraderTemplatesDir)TradingHours\"
+      SkipUnchangedFiles="false"/>  -->
+    <Copy SourceFiles="@(NTProjectFiles)"
+      DestinationFolder="$(NinjaTraderCustomDir)"
+      SkipUnchangedFiles="false"/>
+    <!-- <Copy SourceFiles="@(NativeLibraries)"
+      DestinationFolder="$(NinjaTraderCustomDir)Lib\%(RecursiveDir)"
+      SkipUnchangedFiles="false"/> -->
+  </Target> 
+</Project>
