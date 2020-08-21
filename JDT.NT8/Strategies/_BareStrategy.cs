@@ -1,14 +1,46 @@
-﻿namespace NinjaTrader.NinjaScript.Strategies
+﻿// ***********************************************************************
+// Assembly         : JDT.NT8
+// Author           : JasonnatorDayTrader
+// Created          : 08-16-2020
+//
+// Last Modified By : JasonnatorDayTrader
+// Last Modified On : 08-21-2020
+// ***********************************************************************
+// Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
+// Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8	
+// ***********************************************************************
+namespace NinjaTrader.NinjaScript.Strategies
 {
     using NinjaTrader.NinjaScript;
     using NinjaTrader.NinjaScript.Indicators;
     using System;
 
+    /// <summary>
+    /// Class _BareStrategy.
+    /// Implements the <see cref="NinjaTrader.NinjaScript.Strategies.Strategy" />
+    /// </summary>
+    /// <seealso cref="NinjaTrader.NinjaScript.Strategies.Strategy" />
     public class _BareStrategy : Strategy
     {
+        #region Fields
+
+        /// <summary>
+        /// The touch indicator
+        /// </summary>
         private _BareIndicator touchIndicator;
+
+        /// <summary>
+        /// The touch indicator value
+        /// </summary>
         private double touchIndicatorValue;
 
+        #endregion Fields
+
+        #region Methods
+
+        /// <summary>
+        /// Called when [bar update].
+        /// </summary>
         protected override void OnBarUpdate()
         {
             base.OnBarUpdate();
@@ -25,6 +57,9 @@
             }
         }
 
+        /// <summary>
+        /// Called when [state change].
+        /// </summary>
         protected override void OnStateChange()
         {
             base.OnStateChange();
@@ -69,5 +104,7 @@
                     //    break;
             }
         }
+
+        #endregion Methods
     }
 }

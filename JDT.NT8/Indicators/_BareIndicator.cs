@@ -1,9 +1,31 @@
-﻿namespace NinjaTrader.NinjaScript.Indicators
+﻿// ***********************************************************************
+// Assembly         : JDT.NT8
+// Author           : JasonnatorDayTrader
+// Created          : 08-16-2020
+//
+// Last Modified By : JasonnatorDayTrader
+// Last Modified On : 08-21-2020
+// ***********************************************************************
+// Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
+// Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8	
+// ***********************************************************************
+namespace NinjaTrader.NinjaScript.Indicators
 {
     using NinjaTrader.Data;
 
+    /// <summary>
+    /// Class _BareIndicator. This class cannot be inherited.
+    /// Implements the <see cref="NinjaTrader.NinjaScript.Indicators.Indicator" />
+    /// </summary>
+    /// <seealso cref="NinjaTrader.NinjaScript.Indicators.Indicator" />
     public sealed class _BareIndicator : Indicator
     {
+        #region Properties
+
+        /// <summary>
+        /// Gets the display name.
+        /// </summary>
+        /// <value>The display name.</value>
         public override string DisplayName
         {
             get
@@ -12,6 +34,13 @@
             }
         }
 
+        #endregion Properties
+
+        #region Methods
+
+        /// <summary>
+        /// Called when [bar update].
+        /// </summary>
         protected override void OnBarUpdate()
         {
             base.OnBarUpdate();
@@ -26,11 +55,18 @@
             base.Value[0] = double.NaN;
         }
 
+        /// <summary>
+        /// Handles the <see cref="E:MarketData" /> event.
+        /// </summary>
+        /// <param name="marketDataUpdate">The <see cref="MarketDataEventArgs"/> instance containing the event data.</param>
         protected override void OnMarketData(MarketDataEventArgs marketDataUpdate)
         {
             base.OnMarketData(marketDataUpdate);
         }
 
+        /// <summary>
+        /// Called when [state change].
+        /// </summary>
         protected override void OnStateChange()
         {
             base.OnStateChange();
@@ -91,5 +127,7 @@
                     break;
             }
         }
+
+        #endregion Methods
     }
 }

@@ -1,4 +1,15 @@
-﻿using System.Reflection;
+﻿// ***********************************************************************
+// Assembly         : JDT.NT8
+// Author           : JasonnatorDayTrader
+// Created          : 08-16-2020
+//
+// Last Modified By : JasonnatorDayTrader
+// Last Modified On : 08-21-2020
+// ***********************************************************************
+// Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
+// Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8	
+// ***********************************************************************
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
