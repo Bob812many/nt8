@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Indicators\Demos\DemoSessionIterator.cs" />
     <Compile Include="Indicators\_BareIndicator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Strategies\_BareStrategy.cs" />
@@ -69,7 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\" />
-    <Folder Include="Indicators\Demos\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Libs\NinjaTrader.Core.dll" />

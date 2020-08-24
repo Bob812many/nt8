@@ -51,5 +51,29 @@ namespace JDT.NT8.Utils
             return false;
         }
 
+
+        /// <summary>
+        /// Determines whether the time is in session.
+        /// </summary>
+        /// <param name="sessionIterator">The session iterator.</param>
+        /// <param name="time">The time to check.</param>
+        /// <returns><c>true</c> if is in session; otherwise, <c>false</c>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static bool IsInSession(SessionIterator sessionIterator, DateTime time)
+        {
+            bool isInSession = false;
+
+            if (sessionIterator == null)
+            {
+                throw new ArgumentNullException($"{nameof(sessionIterator)} cannot be null.");
+            }
+
+            if (time >= sessionIterator.ActualSessionBegin && time <= sessionIterator.ActualSessionEnd)
+            {
+                isInSession = true;
+            }
+
+            return isInSession;
+        }
     }
 }
