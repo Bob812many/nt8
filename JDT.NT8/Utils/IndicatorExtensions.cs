@@ -75,5 +75,29 @@ namespace JDT.NT8.Utils
 
             return isInSession;
         }
+
+        // TODO: Test and implement
+        // /// <summary>
+        // /// Tries to get the trading hours.
+        // /// </summary>
+        // /// <param name="tradingHoursName">Name of the trading hours.</param>
+        // /// <param name="tradingHours">The trading hours.</param>
+        // /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        // public static bool TryGetTradingHours(string tradingHoursName, out TradingHours tradingHours)
+        // {
+        //     tradingHours = null;
+        //     var tradingHoursArray = TradingHours.All.ToArray();
+
+        //     for (int i = 0; i < tradingHoursArray.Length; i++)
+        //     {
+        //         if (string.Equals(tradingHoursArray[i].Name, tradingHoursName))
+        //         {
+        //             tradingHours = tradingHoursArray[i];
+        //             return true;
+        //         }
+        //     }
+
+        //     return false;
+        // }
     }
 }

@@ -9,9 +9,13 @@
 // Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
 // Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8	
 // ***********************************************************************
+using NinjaTrader.NinjaScript.Indicators;
+
 namespace NinjaTrader.NinjaScript.Indicators
 {
     using NinjaTrader.Data;
+    using System;
+    using System.Linq;
 
     /// <summary>
     /// Class _BareIndicator. This class cannot be inherited.
@@ -105,9 +109,6 @@ namespace NinjaTrader.NinjaScript.Indicators
                     break;
 
                 case State.DataLoaded:
-#if DEBUG
-                    System.Diagnostics.Debugger.Launch();
-#endif
                     // initialize any Series<T>(this) for synchronization with price
                     break;
 
@@ -115,12 +116,18 @@ namespace NinjaTrader.NinjaScript.Indicators
                     break;
 
                 case State.Transition:
+#if DEBUG
+                    System.Diagnostics.Debugger.Launch();
+#endif
                     break;
 
                 case State.Realtime:
                     break;
 
                 case State.Terminated:
+                    break;
+
+                case State.Finalized:
                     break;
 
                 default:

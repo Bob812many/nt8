@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Versioning\LatestNinjaTraderFilesTests.cs" />
+    <Compile Include="Versioning\NinjaTraderVariableNameTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
