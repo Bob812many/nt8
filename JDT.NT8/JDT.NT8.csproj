@@ -82,6 +82,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Indicators\Demos\DemoSessionIterator.cs" />
     <Compile Include="Indicators\MidPrice.cs" />
     <Compile Include="Indicators\MidPriceFast.cs" />
     <Compile Include="Indicators\_BareIndicator.cs" />
@@ -97,7 +98,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\" />
-    <Folder Include="Indicators\Demos\" />
     <Folder Include="Numerics\" />
   </ItemGroup>
   <ItemGroup>

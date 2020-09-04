@@ -1,4 +1,15 @@
-﻿namespace NinjaTrader.NinjaScript.Indicators
+﻿// ***********************************************************************
+// Assembly         : JDT.NT8
+// Author           : JasonnatorDayTrader
+// Created          : 08-24-2020
+//
+// Last Modified By : JasonnatorDayTrader
+// Last Modified On : 08-26-2020
+// ***********************************************************************
+// Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
+// Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8	
+// ***********************************************************************
+namespace NinjaTrader.NinjaScript.Indicators
 {
     using JDT.NT8.Utils;
     using NinjaTrader.Data;
