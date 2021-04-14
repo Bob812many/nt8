@@ -1,5 +1,4 @@
-﻿using JDT.CopyFiles;
-using System;
+﻿using System;
 using System.IO;
 
 namespace JDT.CopyFiles

@@ -9,16 +9,14 @@
 // Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
 // Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8
 // ***********************************************************************
+using JDT.NT8.Common.Data;
+using NinjaTrader.Gui;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
+
 namespace NinjaTrader.NinjaScript.Indicators
 {
-    using JDT.NT8.Common.Data;
-    using NinjaTrader.Data;
-    using NinjaTrader.Gui;
-    using Rules1;
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.Xml.Serialization;
-
     /// <summary>
     /// Class MidPrice. This class cannot be inherited.
     /// Implements the <see cref="NinjaTrader.NinjaScript.Indicators.Indicator" />

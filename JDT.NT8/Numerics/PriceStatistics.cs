@@ -9,12 +9,12 @@
 // Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
 // Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8	
 // ***********************************************************************
+using NinjaTrader.Cbi;
+using NinjaTrader.Data;
+using System;
+
 namespace JDT.NT8.Numerics
 {
-    using NinjaTrader.Cbi;
-    using NinjaTrader.Data;
-    using System;
-
     /// <summary>
     /// Class StatisticsBase used to support generics in the helper methods.
     /// </summary>

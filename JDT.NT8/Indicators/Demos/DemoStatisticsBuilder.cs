@@ -9,15 +9,13 @@
 // Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
 // Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8	
 // ***********************************************************************
+using JDT.NT8.Common.Data;
+using JDT.NT8.Numerics;
+using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace NinjaTrader.NinjaScript.Indicators
 {
-    using JDT.NT8.Common.Data;
-    using JDT.NT8.Numerics;
-    using JDT.NT8.Utils;
-    using NinjaTrader.Data;
-    using System;
-    using System.ComponentModel.DataAnnotations;
-
     public sealed class DemoStatisticsBuilder : Indicator
     {
         #region Fields
@@ -225,7 +223,7 @@ namespace NinjaTrader.NinjaScript.Indicators
         }
 
         /// <summary>
-        /// The session statistics callback.
+        /// The session statistics callback.  The method is called once <see cref="SafeSessionIterator"/> detects a new session <see cref="SafeSessionIterator.TryGetNextSession(DateTime, bool)"/>.
         /// </summary>
         private void GetSessionStatisticsCallback()
         {

@@ -9,15 +9,10 @@
 // Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
 // Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8	
 // ***********************************************************************
+using NinjaTrader.Data;
+
 namespace JDT.NT8.Common.Data
 {
-    using NinjaTrader.Data;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Interface IMarketDataFeature.
     /// </summary>

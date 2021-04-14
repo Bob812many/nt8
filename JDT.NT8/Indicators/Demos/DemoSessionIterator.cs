@@ -9,13 +9,12 @@
 // Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
 // Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8	
 // ***********************************************************************
+using JDT.NT8.Common.Data;
+using NinjaTrader.Data;
+using System;
+
 namespace NinjaTrader.NinjaScript.Indicators
 {
-    using JDT.NT8.Common.Data;
-    using JDT.NT8.Utils;
-    using NinjaTrader.Data;
-    using System;
-
     public sealed class DemoSessionIterator : Indicator
     {
         #region Fields
