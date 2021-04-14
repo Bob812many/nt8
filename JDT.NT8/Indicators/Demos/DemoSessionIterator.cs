@@ -4,13 +4,14 @@
 // Created          : 08-24-2020
 //
 // Last Modified By : JasonnatorDayTrader
-// Last Modified On : 08-26-2020
+// Last Modified On : 09-12-2020
 // ***********************************************************************
 // Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
 // Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8	
 // ***********************************************************************
 namespace NinjaTrader.NinjaScript.Indicators
 {
+    using JDT.NT8.Common.Data;
     using JDT.NT8.Utils;
     using NinjaTrader.Data;
     using System;
@@ -20,19 +21,9 @@ namespace NinjaTrader.NinjaScript.Indicators
         #region Fields
 
         /// <summary>
-        /// The session begin date
-        /// </summary>
-        private DateTime sessionBeginDate;
-
-        /// <summary>
-        /// The session end date
-        /// </summary>
-        private DateTime sessionEndDate;
-
-        /// <summary>
         /// The session iterator
         /// </summary>
-        private SessionIterator sessionIterator;
+        private SafeSessionIterator safeSessionIterator;
 
         #endregion Fields
 
@@ -66,28 +57,20 @@ namespace NinjaTrader.NinjaScript.Indicators
                 return;
             }
 
-            if (base.IsFirstTickOfBar && base.Bars.IsFirstBarOfSession)
+            // safeSessionIterator: for more information, see https://www.youtube.com/watch?v=cUE57WHQzJY
+            if (this.safeSessionIterator != null)
             {
-                if (this.sessionIterator != null && this.sessionIterator.GetNextSession(base.Time[0], false))
-                {
-                    this.sessionBeginDate = this.sessionIterator.ActualSessionBegin;
-                    this.sessionEndDate = this.sessionIterator.ActualSessionEnd;
+                this.safeSessionIterator.OnBarUpdate();
 
-                    // let's print the new session info to the Output tab
-                    // https://ninjatrader.com/support/helpGuides/nt8/?output.htm
-                    base.Print($"Session begin: {sessionIterator.ActualSessionBegin}, end: {sessionIterator.ActualSessionEnd}");
+                if (!this.safeSessionIterator.InSession)
+                {
+                    return;
                 }
             }
-
-            // let's make sure we're in session
-            if (IndicatorExtensions.IsInSession(this.sessionIterator, base.Time[0]))
+            else
             {
-                // do some super awesome math or statistics only when we're in session
-                int sum = 0;
-                for (int i = 0; i < 100; i++)
-                {
-                    sum += i;
-                }
+                // our session iterator wasn't initialized properly
+                return;
             }
 
             // REQUIRED: necessary to assign any value so strategies using this indicator the
@@ -104,10 +87,17 @@ namespace NinjaTrader.NinjaScript.Indicators
             base.OnMarketData(marketDataUpdate);
 
             // let's make sure we're in session
-            if (IndicatorExtensions.IsInSession(this.sessionIterator, base.Time[0]))
+            if (this.safeSessionIterator != null)
             {
-                int i = 0;
+                this.safeSessionIterator.OnMarketData(marketDataUpdate);
+
+                if (!this.safeSessionIterator.InSession)
+                {
+                    return;
+                }
             }
+
+            // perform CPU extensive operations since we're in session
         }
 
         /// <summary>
@@ -158,7 +148,7 @@ namespace NinjaTrader.NinjaScript.Indicators
 
                     if (this.Bars != null)
                     {
-                        this.sessionIterator = new SessionIterator(this.Bars);
+                        this.safeSessionIterator = new SafeSessionIterator(this, this.ResetCallback);
                         ClearOutputWindow();
                     }
                     else
@@ -184,6 +174,17 @@ namespace NinjaTrader.NinjaScript.Indicators
                 default:
                     break;
             }
+        }
+
+        /// <summary>
+        /// The reset callback.
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        private void ResetCallback()
+        {
+            // let's print the new session info to the Output tab
+            // https://ninjatrader.com/support/helpGuides/nt8/?output.htm
+            base.Print($"Session begin: {safeSessionIterator.ActualSessionBegin}, end: {safeSessionIterator.ActualSessionEnd}");
         }
 
         #endregion Methods

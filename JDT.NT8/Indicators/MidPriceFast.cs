@@ -4,13 +4,14 @@
 // Created          : 08-22-2020
 //
 // Last Modified By : JasonnatorDayTrader
-// Last Modified On : 09-04-2020
+// Last Modified On : 09-12-2020
 // ***********************************************************************
 // Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
 // Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8
 // ***********************************************************************
 namespace NinjaTrader.NinjaScript.Indicators
 {
+    using JDT.NT8.Common.Data;
     using JDT.NT8.Utils;
     using NinjaTrader.Data;
     using NinjaTrader.Gui;
@@ -54,16 +55,6 @@ namespace NinjaTrader.NinjaScript.Indicators
         private SharpDX.Direct2D1.Brush midLineSharpDxBrush;
 
         /// <summary>
-        /// The session begin
-        /// </summary>
-        private DateTime sessionBeginDate;
-
-        /// <summary>
-        /// The session end
-        /// </summary>
-        private DateTime sessionEndDate;
-
-        /// <summary>
         /// The session high price
         /// </summary>
         private double sessionHighPrice;
@@ -71,7 +62,7 @@ namespace NinjaTrader.NinjaScript.Indicators
         /// <summary>
         /// The session iterator
         /// </summary>
-        private SessionIterator sessionIterator;
+        private SafeSessionIterator safeSessionIterator;
 
         /// <summary>
         /// The session line dictionary
@@ -195,34 +186,19 @@ namespace NinjaTrader.NinjaScript.Indicators
                 return;
             }
 
-            // sessionIterator: for more information, see https://www.youtube.com/watch?v=cUE57WHQzJY
-            if (this.sessionIterator != null)
+            // safeSessionIterator: for more information, see https://www.youtube.com/watch?v=cUE57WHQzJY
+            if (this.safeSessionIterator != null)
             {
-                if (base.IsFirstTickOfBar && base.Bars.IsFirstBarOfSession)
+                this.safeSessionIterator.OnBarUpdate();
+
+                if (!this.safeSessionIterator.InSession)
                 {
-                    if (this.sessionIterator.GetNextSession(base.Time[0], true))
-                    {
-                        this.sessionBeginDate = this.sessionIterator.ActualSessionBegin;
-                        this.sessionEndDate = this.sessionIterator.ActualSessionEnd;
-
-                        this.ResetMidVariables();
-
-                        if (!this.sessionLineDictionary.ContainsKey(this.sessionBeginDate.Ticks))
-                        {
-                            this.sessionLineDictionary.Add(this.sessionBeginDate.Ticks, new List<Vector2>());
-                        }
-                    }
+                    return;
                 }
             }
             else
             {
                 // our session iterator wasn't initialized properly
-                return;
-            }
-
-            // only store/calculate values if we're in session
-            if (!IndicatorExtensions.IsInSession(this.sessionIterator, base.Time[0]))
-            {
                 return;
             }
 
@@ -254,7 +230,7 @@ namespace NinjaTrader.NinjaScript.Indicators
 
                 if (this.lastBarSlotIndex < vertex.X)
                 {
-                    this.sessionLineDictionary[this.sessionBeginDate.Ticks].Add(vertex);
+                    this.sessionLineDictionary[this.safeSessionIterator.ActualSessionBegin.Ticks].Add(vertex);
                     this.lastBarSlotIndex = vertex.X;
                 }
             }
@@ -355,7 +331,7 @@ namespace NinjaTrader.NinjaScript.Indicators
 
                     if (this.Bars != null)
                     {
-                        this.sessionIterator = new SessionIterator(this.Bars);
+                        this.safeSessionIterator = new SafeSessionIterator(this, this.ResetMidVariables);
                     }
 
                     break;
@@ -390,6 +366,11 @@ namespace NinjaTrader.NinjaScript.Indicators
             this.sessionMidPrice = 0.0;
             this.sessionHighPrice = double.MinValue; // we expect any value bigger is valid
             this.sessionLowPrice = double.MaxValue; // we expect any value smaller is valid
+
+            if (!this.sessionLineDictionary.ContainsKey(this.safeSessionIterator.ActualSessionBegin.Ticks))
+            {
+                this.sessionLineDictionary.Add(this.safeSessionIterator.ActualSessionBegin.Ticks, new List<Vector2>());
+            }
         }
 
         #endregion Methods

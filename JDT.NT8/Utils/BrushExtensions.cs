@@ -30,5 +30,14 @@ namespace JDT.NT8.Utils
 
             return new SharpDX.Color4(brush.Color.R / 255.0f, brush.Color.G / 255.0f, brush.Color.B / 255.0f, 1.0f);
         }
+        public static SharpDX.Color4 ToColor4(this System.Windows.Media.SolidColorBrush brush, float opacity)
+        {
+            if (brush == null)
+            {
+                throw new ArgumentNullException(nameof(brush));
+            }
+
+            return new SharpDX.Color4(brush.Color.R / 255.0f, brush.Color.G / 255.0f, brush.Color.B / 255.0f, opacity);
+        }
     }
 }
