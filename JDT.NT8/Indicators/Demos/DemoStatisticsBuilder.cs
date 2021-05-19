@@ -12,11 +12,13 @@
 namespace NinjaTrader.NinjaScript.Indicators
 {
     using JDT.NT8.Common.Data;
+    using JDT.NT8.Numerics;
     using JDT.NT8.Utils;
     using NinjaTrader.Data;
     using System;
+    using System.ComponentModel.DataAnnotations;
 
-    public sealed class DemoSessionIterator : Indicator
+    public sealed class DemoStatisticsBuilder : Indicator
     {
         #region Fields
 
@@ -24,6 +26,26 @@ namespace NinjaTrader.NinjaScript.Indicators
         /// The session iterator
         /// </summary>
         private SafeSessionIterator safeSessionIterator;
+
+        /// <summary>
+        /// The price statistics
+        /// </summary>
+        private PriceStatistics priceStatistics;
+
+        /// <summary>
+        /// The volume statistics
+        /// </summary>
+        private VolumeStatistics volumeStatistics;
+
+        /// <summary>
+        /// Use high resolution
+        /// </summary>
+        private bool useHighResolution;
+
+        /// <summary>
+        /// The days lookback period.
+        /// </summary>
+        private int daysLookback;
 
         #endregion Fields
 
@@ -41,6 +63,38 @@ namespace NinjaTrader.NinjaScript.Indicators
             }
         }
 
+        /// <summary>
+        /// Use high resolution
+        /// </summary>
+        [NinjaScriptProperty]
+        [Display(Name = "Use High Resolution", GroupName = "Parameters", Order = 0, Description = "Whether to use high resolution historical data (data intensive!).")]
+        public bool UseHighResolution
+        {
+            get
+            {
+                return this.useHighResolution;
+            }
+            set
+            {
+                this.useHighResolution = value;
+            }
+        }
+
+        [NinjaScriptProperty]
+        [Range(1, int.MaxValue)]
+        [Display(Name = "Days to look back", GroupName = "Parameters", Order = 0, Description = "The number of historical days of statistics.")]
+        public int DaysLookback
+        {
+            get
+            {
+                return this.daysLookback;
+            }
+            set
+            {
+                this.daysLookback = value;
+            }
+        }
+
         #endregion Properties
 
         #region Methods
@@ -52,7 +106,7 @@ namespace NinjaTrader.NinjaScript.Indicators
         {
             base.OnBarUpdate();
 
-            if (base.CurrentBars[0] < base.BarsRequiredToPlot)
+            if (base.CurrentBar < base.BarsRequiredToPlot)
             {
                 return;
             }
@@ -73,31 +127,19 @@ namespace NinjaTrader.NinjaScript.Indicators
                 return;
             }
 
+            // check if price stats are ready
+            if (this.priceStatistics.IsCalculated)
+            {
+            }
+
+            // chec if volue stats are ready
+            if (this.volumeStatistics.IsCalculated)
+            {
+            }
+
             // REQUIRED: necessary to assign any value so strategies using this indicator the
             // OnBarUpdate will be called in this indicator.
             base.Value[0] = double.NaN;
-        }
-
-        /// <summary>
-        /// Handles the <see cref="E:MarketData" /> event.
-        /// </summary>
-        /// <param name="marketDataUpdate">The <see cref="MarketDataEventArgs"/> instance containing the event data.</param>
-        protected override void OnMarketData(MarketDataEventArgs marketDataUpdate)
-        {
-            base.OnMarketData(marketDataUpdate);
-
-            // let's make sure we're in session
-            if (this.safeSessionIterator != null)
-            {
-                this.safeSessionIterator.OnMarketData(marketDataUpdate);
-
-                if (!this.safeSessionIterator.InSession)
-                {
-                    return;
-                }
-            }
-
-            // perform CPU extensive operations since we're in session
         }
 
         /// <summary>
@@ -116,7 +158,7 @@ namespace NinjaTrader.NinjaScript.Indicators
                     base.Name = $"JDT_{this.GetType().Name}";
                     base.Description = @"Simple indicator template to demo SessionIterator.";
 
-                    base.Calculate = Calculate.OnEachTick;
+                    base.Calculate = Calculate.OnBarClose;
                     base.IsSuspendedWhileInactive = true;
                     base.IsAutoScale = true;
                     base.IsOverlay = true;
@@ -126,13 +168,16 @@ namespace NinjaTrader.NinjaScript.Indicators
 
                     base.BarsRequiredToPlot = 0;
 
+                    this.useHighResolution = false;
+                    this.daysLookback = 7;
+
                     break;
 
                 case State.Configure:
                     // REQUIRED: necessary to add at least 1 plot so strategies using this indicator
                     // the OnBarUpdate will be called in this indicator.
                     base.AddPlot(System.Windows.Media.Brushes.Transparent, "touchPlot");
-
+                    
                     // add any data series necessary
                     //base.AddDataSeries(BarsPeriodType.Minute, 1);
                     break;
@@ -141,14 +186,11 @@ namespace NinjaTrader.NinjaScript.Indicators
                     break;
 
                 case State.DataLoaded:
-#if DEBUG
-                    System.Diagnostics.Debugger.Launch();
-#endif
                     // initialize any Series<T>(this) for synchronization with price
 
                     if (this.Bars != null)
                     {
-                        this.safeSessionIterator = new SafeSessionIterator(this, this.ResetCallback);
+                        this.safeSessionIterator = new SafeSessionIterator(this, this.GetSessionStatisticsCallback);
                         ClearOutputWindow();
                     }
                     else
@@ -163,6 +205,9 @@ namespace NinjaTrader.NinjaScript.Indicators
                     break;
 
                 case State.Transition:
+//#if DEBUG
+//                    System.Diagnostics.Debugger.Launch();
+//#endif
                     break;
 
                 case State.Realtime:
@@ -171,20 +216,30 @@ namespace NinjaTrader.NinjaScript.Indicators
                 case State.Terminated:
                     break;
 
+                case State.Finalized:
+                    break;
+
                 default:
                     break;
             }
         }
 
         /// <summary>
-        /// The reset callback.
+        /// The session statistics callback.
         /// </summary>
-        /// <exception cref="NotImplementedException"></exception>
-        private void ResetCallback()
+        private void GetSessionStatisticsCallback()
         {
+            // let's look back 7 days from the beginning of this session
+            DateTime fromDateTime = this.safeSessionIterator.ActualSessionBegin.Subtract(TimeSpan.FromDays(this.daysLookback));
+
+            // both of these stats take some time so get them started then check later if they're ready
+            StatisticsBuilder.GetHistoricalPriceStatistics(this, fromDateTime, this.safeSessionIterator.ActualSessionBegin, this.useHighResolution, out this.priceStatistics);
+            StatisticsBuilder.GetHistoricalVolumeStatistics(this, fromDateTime, this.safeSessionIterator.ActualSessionEnd, this.useHighResolution, out this.volumeStatistics);
+
             // let's print the new session info to the Output tab
             // https://ninjatrader.com/support/helpGuides/nt8/?output.htm
-            base.Print($"Session begin: {safeSessionIterator.ActualSessionBegin}, end: {safeSessionIterator.ActualSessionEnd}");
+            base.Print($"Session begin: {this.safeSessionIterator.ActualSessionBegin}, end: {this.safeSessionIterator.ActualSessionEnd}");
+
         }
 
         #endregion Methods

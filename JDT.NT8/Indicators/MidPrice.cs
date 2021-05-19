@@ -4,15 +4,17 @@
 // Created          : 08-28-2020
 //
 // Last Modified By : JasonnatorDayTrader
-// Last Modified On : 09-03-2020
+// Last Modified On : 09-12-2020
 // ***********************************************************************
 // Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
 // Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8
 // ***********************************************************************
 namespace NinjaTrader.NinjaScript.Indicators
 {
+    using JDT.NT8.Common.Data;
     using NinjaTrader.Data;
     using NinjaTrader.Gui;
+    using Rules1;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Xml.Serialization;
@@ -44,7 +46,8 @@ namespace NinjaTrader.NinjaScript.Indicators
         /// <summary>
         /// The session iterator
         /// </summary>
-        private SessionIterator sessionIterator;
+        private SafeSessionIterator safeSessionIterator;
+
         /// <summary>
         /// The session low price
         /// </summary>
@@ -125,19 +128,21 @@ namespace NinjaTrader.NinjaScript.Indicators
                 return;
             }
 
-            // sessionIterator: for more information, see https://www.youtube.com/watch?v=cUE57WHQzJY
-            if (this.sessionIterator != null)
+            // safeSessionIterator: for more information, see https://www.youtube.com/watch?v=cUE57WHQzJY
+            if (this.safeSessionIterator != null)
             {
-                if (base.IsFirstTickOfBar && base.Bars.IsFirstBarOfSession)
+                this.safeSessionIterator.OnBarUpdate();
+
+                if (!this.safeSessionIterator.InSession)
                 {
-                    if (this.sessionIterator.GetNextSession(base.Time[0], true))
-                    {
-                        this.sessionHighPrice = double.MinValue;
-                        this.sessionLowPrice = double.MaxValue;
-                    }
+                    return;
                 }
             }
-
+            else
+            {
+                // our session iterator wasn't initialized properly
+                return;
+            }
 
             // track session high and low prices
             if (base.High[0] > this.sessionHighPrice)
@@ -204,7 +209,7 @@ namespace NinjaTrader.NinjaScript.Indicators
                 case State.DataLoaded:
                     if (this.Bars != null)
                     {
-                        this.sessionIterator = new SessionIterator(this.Bars);
+                        this.safeSessionIterator = new SafeSessionIterator(this, this.ResetVariables);
                     }
 
                     break;
@@ -224,6 +229,12 @@ namespace NinjaTrader.NinjaScript.Indicators
                 default:
                     break;
             }
+        }
+
+        private void ResetVariables()
+        {
+            this.sessionHighPrice = double.MinValue;
+            this.sessionLowPrice = double.MaxValue;
         }
 
         #endregion Methods
