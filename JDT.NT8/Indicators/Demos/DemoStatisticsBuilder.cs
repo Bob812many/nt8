@@ -4,28 +4,26 @@
 // Created          : 08-24-2020
 //
 // Last Modified By : JasonnatorDayTrader
-// Last Modified On : 09-12-2020
+// Last Modified On : 04-13-2021
 // ***********************************************************************
 // Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
 // Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8	
 // ***********************************************************************
+using JDT.NT8.Common.Data;
+using JDT.NT8.Numerics;
+using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace NinjaTrader.NinjaScript.Indicators
 {
-    using JDT.NT8.Common.Data;
-    using JDT.NT8.Numerics;
-    using JDT.NT8.Utils;
-    using NinjaTrader.Data;
-    using System;
-    using System.ComponentModel.DataAnnotations;
-
     public sealed class DemoStatisticsBuilder : Indicator
     {
         #region Fields
 
         /// <summary>
-        /// The session iterator
+        /// The days lookback period.
         /// </summary>
-        private SafeSessionIterator safeSessionIterator;
+        private int daysLookback;
 
         /// <summary>
         /// The price statistics
@@ -33,9 +31,9 @@ namespace NinjaTrader.NinjaScript.Indicators
         private PriceStatistics priceStatistics;
 
         /// <summary>
-        /// The volume statistics
+        /// The session iterator
         /// </summary>
-        private VolumeStatistics volumeStatistics;
+        private SafeSessionIterator safeSessionIterator;
 
         /// <summary>
         /// Use high resolution
@@ -43,13 +41,27 @@ namespace NinjaTrader.NinjaScript.Indicators
         private bool useHighResolution;
 
         /// <summary>
-        /// The days lookback period.
+        /// The volume statistics
         /// </summary>
-        private int daysLookback;
-
+        private VolumeStatistics volumeStatistics;
         #endregion Fields
 
         #region Properties
+
+        [NinjaScriptProperty]
+        [Range(1, int.MaxValue)]
+        [Display(Name = "Days to look back", GroupName = "Parameters", Order = 0, Description = "The number of historical days of statistics.")]
+        public int DaysLookback
+        {
+            get
+            {
+                return this.daysLookback;
+            }
+            set
+            {
+                this.daysLookback = value;
+            }
+        }
 
         /// <summary>
         /// Gets the display name.
@@ -79,22 +91,6 @@ namespace NinjaTrader.NinjaScript.Indicators
                 this.useHighResolution = value;
             }
         }
-
-        [NinjaScriptProperty]
-        [Range(1, int.MaxValue)]
-        [Display(Name = "Days to look back", GroupName = "Parameters", Order = 0, Description = "The number of historical days of statistics.")]
-        public int DaysLookback
-        {
-            get
-            {
-                return this.daysLookback;
-            }
-            set
-            {
-                this.daysLookback = value;
-            }
-        }
-
         #endregion Properties
 
         #region Methods
@@ -130,11 +126,13 @@ namespace NinjaTrader.NinjaScript.Indicators
             // check if price stats are ready
             if (this.priceStatistics.IsCalculated)
             {
+                // do logic which uses the price statistics
             }
 
             // chec if volue stats are ready
             if (this.volumeStatistics.IsCalculated)
             {
+                // do logic which uses the volume statistics
             }
 
             // REQUIRED: necessary to assign any value so strategies using this indicator the
@@ -225,7 +223,7 @@ namespace NinjaTrader.NinjaScript.Indicators
         }
 
         /// <summary>
-        /// The session statistics callback.
+        /// The session statistics callback.  The method is called once <see cref="SafeSessionIterator"/> detects a new session <see cref="SafeSessionIterator.TryGetNextSession(DateTime, bool)"/>.
         /// </summary>
         private void GetSessionStatisticsCallback()
         {

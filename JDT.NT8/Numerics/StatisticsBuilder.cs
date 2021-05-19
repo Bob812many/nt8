@@ -9,15 +9,12 @@
 // Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
 // Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8	
 // ***********************************************************************
+using NinjaTrader.Data;
+using NinjaTrader.NinjaScript;
+using System;
+
 namespace JDT.NT8.Numerics
 {
-    using NinjaTrader.Cbi;
-    using NinjaTrader.Data;
-    using NinjaTrader.NinjaScript;
-    using System;
-    using System.Text;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Class StatisticsBuilder.
     /// </summary>
@@ -34,7 +31,9 @@ namespace JDT.NT8.Numerics
         /// <param name="useHighResolution">if set to <c>true</c> [use high resolution].</param>
         /// <param name="statistics">The statistics.</param>
         /// <param name="tradingHours">The trading hours (optional).</param>
-        /// <returns><c>true</c> if statistics are ready, <c>false</c> otherwise.</returns>
+        /// <remarks>
+        /// See <seealso cref="https://ninjatrader.com/support/helpGuides/nt8/?tradinghours_name.htm"/> for getting NT8 trading hours template names.
+        /// </remarks>
         public static void GetHistoricalPriceStatistics(NinjaScriptBase parent, DateTime fromTime, DateTime toTime, bool useHighResolution,
             out PriceStatistics statistics, TradingHours tradingHours = null)
         {
@@ -69,6 +68,9 @@ namespace JDT.NT8.Numerics
         /// <param name="useHighResolution">if set to <c>true</c> [use high resolution].</param>
         /// <param name="statistics">The statistics.</param>
         /// <param name="tradingHours">The trading hours.</param>
+        /// <remarks>
+        /// See <seealso cref="https://ninjatrader.com/support/helpGuides/nt8/?tradinghours_name.htm"/> for getting NT8 trading hours template names.
+        /// </remarks>
         public static void GetHistoricalVolumeStatistics(NinjaScriptBase parent, DateTime fromTime, DateTime toTime, bool useHighResolution,
             out VolumeStatistics statistics, TradingHours tradingHours = null)
         {

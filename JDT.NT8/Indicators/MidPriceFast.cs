@@ -9,22 +9,19 @@
 // Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
 // Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8
 // ***********************************************************************
+using JDT.NT8.Common.Data;
+using JDT.NT8.Utils;
+using NinjaTrader.Gui.Chart;
+using SharpDX;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Xml.Serialization;
+
 namespace NinjaTrader.NinjaScript.Indicators
 {
-    using JDT.NT8.Common.Data;
-    using JDT.NT8.Utils;
-    using NinjaTrader.Data;
-    using NinjaTrader.Gui;
-    using NinjaTrader.Gui.Chart;
-    using SharpDX;
-    using SharpDX.Direct2D1;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Xml.Serialization;
-
     /// <summary>
     /// Class MidPriceFast. This class cannot be inherited.  Uses SharpDX custom rendering for max performance.
     /// Implements the <see cref="NinjaTrader.NinjaScript.Indicators.Indicator" />

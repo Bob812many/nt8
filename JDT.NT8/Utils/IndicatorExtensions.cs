@@ -9,13 +9,13 @@
 // Created in support of my YouTube channel https://www.youtube.com/user/Jasonnator
 // Code freely available at https://gitlab.com/jasonnatordaytrader/jdt.nt8	
 // ***********************************************************************
+using NinjaTrader.Data;
+using NinjaTrader.NinjaScript;
+using System;
+using System.Collections.Generic;
+
 namespace JDT.NT8.Utils
 {
-    using NinjaTrader.Data;
-    using NinjaTrader.NinjaScript;
-    using System;
-    using System.Collections.Generic;
-
     /// <summary>
     /// Helper class for common indicator functionality.
     /// </summary>
