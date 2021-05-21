@@ -95,7 +95,9 @@
     <Compile Include="Numerics\StatisticsBuilder.cs" />
     <Compile Include="Numerics\VolumeStatistics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Python\Classification_Testing.ipynb" />
     <None Include="Strategies\_BareStrategy.cs" />
+    <Compile Include="Strategies\_TensorFlowStrategyTest.cs" />
     <Compile Include="Utils\BrushExtensions.cs" />
     <Compile Include="Utils\IndicatorExtensions.cs" />
   </ItemGroup>
