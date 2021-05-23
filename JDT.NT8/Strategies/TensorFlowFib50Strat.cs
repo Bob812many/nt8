@@ -183,7 +183,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 		/// <summary>
 		/// The window size.
 		/// </summary>
-		private int windowSize = 50;
+		private int windowSize = 5;
 
 		private ATR atr14;
 
@@ -232,7 +232,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 
 			this.queueWorker.AddValue(this.ema14);
 			this.queueWorker.AddValue(this.ema50);
-			//this.queueWorker.AddValue(this.atr14);
+			this.queueWorker.AddValue(this.atr14);
 
 			// entry logic
 			if (base.Position.MarketPosition == MarketPosition.Flat)
@@ -417,7 +417,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 
 				this.queueWorker.AddIndicator(this.ema14);
 				this.queueWorker.AddIndicator(this.ema50);
-				//this.queueWorker.AddIndicator(this.atr14);
+				this.queueWorker.AddIndicator(this.atr14);
 
 				if (this.isWritingTrainingData)
 				{
